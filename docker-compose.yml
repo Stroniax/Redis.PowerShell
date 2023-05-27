@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  redis:
+    image: redis
+    networks:
+      - redis
+
+  powershell:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        CONFIGURATION: Release
+        VERSION: 1.0.0-docker
+    volumes:
+      - /:/dockerhost
+    working_dir: /app
+    networks:
+      - redis
+    depends_on:
+      - redis
+    stdin_open: true
+    tty: true
+
+networks:
+  redis:

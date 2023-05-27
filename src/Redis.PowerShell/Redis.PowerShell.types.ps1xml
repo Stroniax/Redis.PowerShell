@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<Types>
+    <Type>
+        <Name>StackExchange.Redis.ConfigurationOptions</Name>
+        <TypeConverter>
+            <TypeName>Redis.PowerShell.ConfigurationOptionsTypeConverter</TypeName>
+        </TypeConverter>
+    </Type>
+    <Type>
+        <Name>StackExchange.Redis.RedisValue</Name>
+        <Members>
+            <ScriptProperty>
+                <Name>Value</Name>
+                <GetScriptBlock>return $this</GetScriptBlock>
+            </ScriptProperty>
+        </Members>
+    </Type>
+</Types>

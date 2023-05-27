@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>Redis.PowerShell.RedisSession</Name>
+            <ViewSelectedBy>
+                <TypeName>Redis.PowerShell.RedisSession</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <Label>Name</Label>
+                    </TableColumnHeader>
+                    <TableColumnHeader />
+                    <TableColumnHeader />
+                    <TableColumnHeader />
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <ScriptBlock>
+                                    $Style = if ($_.IsDefault) { $PSStyle.Foreground.Cyan } else { '' }
+                                    $Name = $_.Name
+                                    $Reset = $PSStyle.Reset
+                                    "$Style$Name$Reset"
+                                </ScriptBlock>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>InstanceId</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>IsConnected</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>EndPoints</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+        <View>
+            <Name>StackExchange.Redis.RedisValue</Name>
+            <ViewSelectedBy>
+                <TypeName>StackExchange.Redis.RedisValue</TypeName>
+            </ViewSelectedBy>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <ExpressionBinding>
+                                <PropertyName>Value</PropertyName>
+                            </ExpressionBinding>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>

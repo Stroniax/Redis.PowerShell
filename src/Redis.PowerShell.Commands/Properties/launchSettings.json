@@ -1,0 +1,17 @@
+{
+  "profiles": {
+    "Redis.PowerShell.Commands": {
+      "commandName": "Project"
+    },
+    "debug.ps1": {
+      "commandName": "Executable",
+      "executablePath": "pwsh",
+      "commandLineArgs": "-noexit -noprofile -file $(SolutionDir)debug.ps1 -UseCurrentSession"
+    },
+    "Docker": {
+      "commandName": "Executable",
+      "executablePath": "docker",
+      "commandLineArgs": "compose run -i powershell"
+    }
+  }
+}
