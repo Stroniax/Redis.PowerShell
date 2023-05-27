@@ -40,6 +40,11 @@
                 "."
             ],
             "group": "build",
+        },
+        {
+            "label": "build-docs",
+            "command": "pwsh",
+            "args": ["-file", "${workspaceFolder}/.vscode/build-docs.ps1"],
         }
     ]
 }
