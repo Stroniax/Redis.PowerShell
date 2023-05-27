@@ -28,6 +28,18 @@
                 "kind": "build",
                 "isDefault": true
             },
+        },
+        {
+            "label": "Docker Build",
+            "command": "docker",
+            "type": "shell",
+            "args": [
+                "build",
+                "-t",
+                "redis.powershell",
+                "."
+            ],
+            "group": "build",
         }
     ]
 }

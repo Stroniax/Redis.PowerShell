@@ -18,6 +18,13 @@
             "type": "PowerShell",
             "request": "launch",
             "createTemporaryIntegratedConsole": true
+        },
+        {
+            "name": "PowerShell: Launch in Docker",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceFolder}/debug.ps1 -Docker",
+            
         }
     ]
 }

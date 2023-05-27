@@ -18,6 +18,7 @@ if ($Docker) {
         docker compose build
     }
     docker compose run -i powershell
+    docker compose down
 
     Pop-Location
     return
@@ -60,6 +61,8 @@ Remove-Item $MyInvocation.MyCommand.Path
 '@ | Out-File $TempFile
 
 if ($UseCurrentSession) {
+    # WARNING: if replacing this with direct script call,
+    # be sure to pull out the Remove-Item command
     . $TempFile $DebugModulePath
 }
 else {
