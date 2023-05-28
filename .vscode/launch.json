@@ -13,15 +13,14 @@
         // },
         {
             "name": "PowerShell Interactive Session",
-            "script": "${workspaceFolder}/debug.ps1",
-            "args": ["-UseCurrentSession", "-NoBuild"],
+            "script": "${workspaceFolder}/build/start-interactive.ps1",
             "type": "PowerShell",
             "request": "launch",
             "preLaunchTask": "build-manifest",
-            "createTemporaryIntegratedConsole": true
+            "createTemporaryIntegratedConsole": true,
         },
         {
-            "name": "PowerShell inside Docker",
+            "name": "PowerShell in Docker",
             "type": "PowerShell",
             "request": "launch",
             "script": "${workspaceFolder}/debug.ps1 -Docker",

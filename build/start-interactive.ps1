@@ -10,6 +10,10 @@ param(
 
 Push-Location $HOME
 
+if (-not ($ModulePath)) {
+    $ModulePath = Split-Path -Path $PSScriptRoot -Parent
+    $ModulePath = Join-Path $ModulePath -ChildPath 'build/Debug/Redis.PowerShell/1.0.0/Redis.PowerShell.psd1'
+}
 $Module = Import-Module $ModulePath -PassThru -ErrorAction Stop
 
 function Prompt {
