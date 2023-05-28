@@ -26,6 +26,6 @@ param(
 
 Push-Location $SolutionDirectory
 
-docker build . -t redis.powershell --build-arg Configuration=$Configuration --build-arg Version=$Version
+docker build . -t redis.powershell -t redis.powershell:$Version --build-arg Configuration=$Configuration --build-arg Version=$Version
 
 Pop-Location

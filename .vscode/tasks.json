@@ -11,10 +11,9 @@
             "args": [
                 "publish",
                 "-o",
-                "${workspaceFolder}/build/Debug/Redis.PowerShell/1.0.0/",
+                "${workspaceFolder}/build/${input:configuration}/Redis.PowerShell/${input:version}/",
                 "-c",
-                // do I want to use a debug configuration? does that mean breakpoints stay?
-                "Debug",
+                "${input:configuration}",
                 // Ask dotnet build to generate full paths for file names.
                 "/property:GenerateFullPaths=true",
                 // Do not generate summary otherwise it leads to duplicate errors in Problems panel
@@ -37,7 +36,7 @@
                 "-SolutionDirectory",
                 "${workspaceFolder}",
                 "-FullOutputPath",
-                "${workspaceFolder}/build/Debug/Redis.PowerShell/1.0.0"
+                "${workspaceFolder}/build/${input:configuration}/Redis.PowerShell/${input:version}"
             ],
         },
         // build-pwsh
@@ -51,7 +50,7 @@
                 "-SolutionDirectory",
                 "${workspaceFolder}",
                 "-FullOutputPath",
-                "${workspaceFolder}/build/Debug/Redis.PowerShell/1.0.0"
+                "${workspaceFolder}/build/${input:configuration}/Redis.PowerShell/${input:version}"
             ]
         },
         // build-manifest
@@ -64,14 +63,18 @@
                 "-SolutionDirectory",
                 "${workspaceFolder}",
                 "-FullOutputPath",
-                "${workspaceFolder}/build/Debug/Redis.PowerShell/1.0.0",
+                "${workspaceFolder}/build/${input:configuration}/Redis.PowerShell/${input:version}",
                 "-Version",
-                "1.0.0"
+                "${input:version}"
             ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "dependsOn": [
                 "build-dll",
                 "build-docs",
-                "build-pwsh"
+                "build-pwsh",
             ],
             "dependsOrder": "parallel"
         },
@@ -84,7 +87,7 @@
                 "-Command",
                 "Remove-Item",
                 "-Path",
-                "${workspaceFolder}/build/Debug/Redis.PowerShell/1.0.0/",
+                "${workspaceFolder}/build/${input:configuration}/Redis.PowerShell/${input:version}/",
                 // "-Force",
                 "-Recurse"
             ],
@@ -103,12 +106,13 @@
             "command": "pwsh",
             "args": [
                 "-file",
-                "${workspaceFolder}/build.ps1"
+                "${workspaceFolder}/build.ps1",
+                "-configuration",
+                "${input:configuration}",
+                "-version",
+                "${input:version}"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
         },
         // docker build
         {
@@ -118,10 +122,36 @@
             "args": [
                 "build",
                 "-t",
+                "redis.powershell:${input:version}",
+                "-t",
+                "redis.powershell:latest",
+                "-t",
                 "redis.powershell",
-                "."
+                ".",
+                "--build-arg",
+                "configuration=${input:configuration}",
+                "--build-arg",
+                "version=${input:version}"
             ],
             "group": "build",
+        },
+    ],
+    "inputs": [
+        {
+            "id": "configuration",
+            "description": "The build configuration to use. 'Release' or 'Debug'",
+            "default": "Debug",
+            "options": [
+                "Debug",
+                "Release"
+            ],
+            "type": "pickString"
+        },
+        {
+            "id": "version",
+            "description": "A version string that controls the module version to build as",
+            "default": "1.0.0",
+            "type": "promptString",
         },
     ]
 }
