@@ -3,12 +3,18 @@
     // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
+        // build-dll
         {
             "label": "build-dll",
-            "command": "dotnet",
             "type": "shell",
+            "command": "dotnet",
             "args": [
-                "build",
+                "publish",
+                "-o",
+                "${workspaceFolder}/build/Debug/Redis.PowerShell/1.0.0/",
+                "-c",
+                // do I want to use a debug configuration? does that mean breakpoints stay?
+                "Debug",
                 // Ask dotnet build to generate full paths for file names.
                 "/property:GenerateFullPaths=true",
                 // Do not generate summary otherwise it leads to duplicate errors in Problems panel
@@ -18,21 +24,97 @@
             "presentation": {
                 "reveal": "silent"
             },
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
         },
+        // build-docs
+        {
+            "label": "build-docs",
+            "type": "shell",
+            "command": "pwsh",
+            "args": [
+                "-File",
+                "${workspaceFolder}/build/build-docs.ps1",
+                "-SolutionDirectory",
+                "${workspaceFolder}",
+                "-FullOutputPath",
+                "${workspaceFolder}/build/Debug/Redis.PowerShell/1.0.0"
+            ],
+        },
+        // build-pwsh
+        {
+            "label": "build-pwsh",
+            "type": "shell",
+            "command": "pwsh",
+            "args": [
+                "-File",
+                "${workspaceFolder}/build/build-pwsh.ps1",
+                "-SolutionDirectory",
+                "${workspaceFolder}",
+                "-FullOutputPath",
+                "${workspaceFolder}/build/Debug/Redis.PowerShell/1.0.0"
+            ]
+        },
+        // build-manifest
+        {
+            "label": "build-manifest",
+            "command": "pwsh",
+            "args": [
+                "-File",
+                "${workspaceFolder}/build/build-manifest.ps1",
+                "-SolutionDirectory",
+                "${workspaceFolder}",
+                "-FullOutputPath",
+                "${workspaceFolder}/build/Debug/Redis.PowerShell/1.0.0",
+                "-Version",
+                "1.0.0"
+            ],
+            "dependsOn": [
+                "build-dll",
+                "build-docs",
+                "build-pwsh"
+            ],
+            "dependsOrder": "parallel"
+        },
+        // clean
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "pwsh",
+            "args": [
+                "-Command",
+                "Remove-Item",
+                "-Path",
+                "${workspaceFolder}/build/Debug/Redis.PowerShell/1.0.0/",
+                // "-Force",
+                "-Recurse"
+            ],
+        },
+        // rebuild
+        {
+            "label": "rebuild",
+            "dependsOn": [
+                "clean",
+                "build-manifest"
+            ],
+        },
+        // build.ps1
         {
             "label": "build.ps1",
             "command": "pwsh",
-            "args": ["-file", "${workspaceFolder}/build.ps1"],
+            "args": [
+                "-file",
+                "${workspaceFolder}/build.ps1"
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
         },
+        // docker build
         {
             "label": "Docker Build",
-            "command": "docker",
             "type": "shell",
+            "command": "docker",
             "args": [
                 "build",
                 "-t",
@@ -41,10 +123,5 @@
             ],
             "group": "build",
         },
-        {
-            "label": "build-docs",
-            "command": "pwsh",
-            "args": ["-file", "${workspaceFolder}/.vscode/build-docs.ps1"],
-        }
     ]
 }

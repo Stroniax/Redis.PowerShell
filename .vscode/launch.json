@@ -12,15 +12,16 @@
         //     "args": []
         // },
         {
-            "name": "PowerShell: Launch debug.ps1",
+            "name": "PowerShell Interactive Session",
             "script": "${workspaceFolder}/debug.ps1",
-            "args": ["-UseCurrentSession"],
+            "args": ["-UseCurrentSession", "-NoBuild"],
             "type": "PowerShell",
             "request": "launch",
+            "preLaunchTask": "build-manifest",
             "createTemporaryIntegratedConsole": true
         },
         {
-            "name": "PowerShell: Launch in Docker",
+            "name": "PowerShell inside Docker",
             "type": "PowerShell",
             "request": "launch",
             "script": "${workspaceFolder}/debug.ps1 -Docker",

@@ -9,7 +9,7 @@ param(
     [string]
     $FullOutputPath,
 
-    [Parameter()]
+    [Parameter(Mandatory)]
     [System.Management.Automation.SemanticVersion]
     $Version
 )
