@@ -5,7 +5,11 @@ This script is the interactive PowerShell state to use when developing the modul
 param(
     [Parameter()]
     [string]
-    $ModulePath
+    $ModulePath,
+
+    [Parameter()]
+    [switch]
+    $NoExit
 )
 
 Push-Location $HOME
@@ -28,4 +32,8 @@ function Prompt {
     "$($PSStyle.Reset)`n" +
     "[$($PSStyle.Foreground.Yellow)$PID$($PSStyle.Reset)] " +
     "$ModuleText> "
+}
+
+if ($NoExit) {
+    $Host.EnterNestedPrompt()
 }
