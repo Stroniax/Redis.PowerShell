@@ -4,9 +4,9 @@ param(
     [string]
     $SolutionDirectory = (Split-Path -Path $PSScriptRoot -Parent),
 
-    [Parameter()]
+    [Parameter(Mandatory)]
     [System.Management.Automation.SemanticVersion]
-    $Version = '1.0.0',
+    $Version,
 
     [Parameter(ParameterSetName = 'Path')]
     [string]

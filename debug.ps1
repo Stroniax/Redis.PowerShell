@@ -24,9 +24,9 @@ if ($Docker) {
     return
 }
 
-$DebugModulePath = "$PSScriptRoot/build/Debug/Redis.PowerShell/1.0.0/Redis.PowerShell.psd1"
+$DebugModulePath = "$PSScriptRoot/build/Debug/Redis.PowerShell"
 if (!$NoBuild) {
-    $DebugModulePath = & "$PSScriptRoot/build.ps1" -Configuration 'Debug' -Version '1.0.0'
+    $DebugModulePath = & "$PSScriptRoot/build.ps1" -Configuration 'Debug' -Version '0.0.1-dev'
     if (!$?) {
         return;
     }

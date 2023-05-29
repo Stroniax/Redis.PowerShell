@@ -1,3 +1,5 @@
+#Requires -Version 7.0
+
 <#
 .SYNOPSIS
 
@@ -12,7 +14,8 @@ param(
     [string]
     $SolutionDirectory,
 
-    # Configuration to build. Dotnet build arg.
+    # Configuration to build. Dotnet build arg. The script module will always be built
+    # with -Configuration 'Release' in Docker.
     [Parameter()]
     [string]
     $Configuration = 'Release',
@@ -21,7 +24,7 @@ param(
     # Semantic version which may include -prerelease suffix.
     [Parameter()]
     [System.Management.Automation.SemanticVersion]
-    $Version = '1.0.0'
+    $Version = '0.0.1-dev'
 )
 
 Push-Location $SolutionDirectory

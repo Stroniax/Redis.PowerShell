@@ -11,9 +11,10 @@
             "args": [
                 "publish",
                 "-o",
-                "${workspaceFolder}/build/${input:configuration}/Redis.PowerShell/${input:version}/",
+                "${workspaceFolder}/build/Debug/Redis.PowerShell",
                 "-c",
-                "${input:configuration}",
+                "Debug",
+                "/p:Version=0.0.1-dev",
                 // Ask dotnet build to generate full paths for file names.
                 "/property:GenerateFullPaths=true",
                 // Do not generate summary otherwise it leads to duplicate errors in Problems panel
@@ -36,8 +37,9 @@
                 "-SolutionDirectory",
                 "${workspaceFolder}",
                 "-FullOutputPath",
-                "${workspaceFolder}/build/${input:configuration}/Redis.PowerShell/${input:version}"
+                "${workspaceFolder}/build/Debug/Redis.PowerShell"
             ],
+            "group": "build"
         },
         // build-pwsh
         {
@@ -50,8 +52,11 @@
                 "-SolutionDirectory",
                 "${workspaceFolder}",
                 "-FullOutputPath",
-                "${workspaceFolder}/build/${input:configuration}/Redis.PowerShell/${input:version}"
-            ]
+                "${workspaceFolder}/build/Debug/Redis.PowerShell",
+                "-Configuration",
+                "Debug"
+            ],
+            "group": "build"
         },
         // build-manifest
         {
@@ -63,9 +68,11 @@
                 "-SolutionDirectory",
                 "${workspaceFolder}",
                 "-FullOutputPath",
-                "${workspaceFolder}/build/${input:configuration}/Redis.PowerShell/${input:version}",
+                "${workspaceFolder}/build/Debug/Redis.PowerShell",
+                "-Configuration",
+                "Debug",
                 "-Version",
-                "${input:version}"
+                "0.0.1-dev"
             ],
             "group": {
                 "kind": "build",
@@ -87,10 +94,11 @@
                 "-Command",
                 "Remove-Item",
                 "-Path",
-                "${workspaceFolder}/build/${input:configuration}/Redis.PowerShell/${input:version}/",
+                "${workspaceFolder}/build/Debug/Redis.PowerShell",
                 // "-Force",
                 "-Recurse"
             ],
+            "group": "build"
         },
         // rebuild
         {
@@ -99,6 +107,8 @@
                 "clean",
                 "build-manifest"
             ],
+            "dependsOrder": "sequence",
+            "group": "build"
         },
         // build.ps1
         {
@@ -129,12 +139,41 @@
                 "redis.powershell",
                 ".",
                 "--build-arg",
-                "configuration=${input:configuration}",
+                "configuration=Release",
                 "--build-arg",
                 "version=${input:version}"
             ],
             "group": "build",
         },
+        // build-release
+        {
+            "label": "build-release",
+            "command": "pwsh",
+            "args": [
+                "-file",
+                "${workspaceFolder}/build.ps1",
+                "-configuration",
+                "Release",
+                "-version",
+                "${input:version}"
+            ],
+            "group": "build",
+        },
+        // update-documentation
+        {
+            "label": "update-documentation",
+            "command": "pwsh",
+            "args": [
+                "-File",
+                "${workspaceFolder}/build/update-docs.ps1",
+                "-SolutionDirectory",
+                "${workspaceFolder}",
+            ],
+            "dependsOn": [
+                "build-manifest"
+            ],
+            "group": "none",
+        }
     ],
     "inputs": [
         {
