@@ -29,19 +29,19 @@ namespace Redis.PowerShell.Commands
             {
                 var db = session.Database;
 
-                WriteKeysForDb(db);
+                WriteKeysForDb(session, db);
             }
         }
 
-        private void WriteKeysForDb(IDatabase db)
+        private void WriteKeysForDb(RedisSession session, IDatabase db)
         {
             foreach (var (key, server) in ResolveKeys(db))
             {
-                WriteKey(server, db, key);
+                WriteKey(session, server, db, key);
             }
         }
 
-        private void WriteKey(IServer server, IDatabase db, RedisKey key)
+        private void WriteKey(RedisSession session, IServer server, IDatabase db, RedisKey key)
         {
             var type = db.KeyType(key, CommandFlags);
 
@@ -79,11 +79,12 @@ namespace Redis.PowerShell.Commands
 
             foreach (var component in value)
             {
-                var pso = PSObject.AsPSObject(component);
-                pso.Members.Add(new PSNoteProperty("Key", key));
-                pso.Members.Add(new PSNoteProperty("ServerEndPoint", server.EndPoint));
-                pso.Members.Add(new PSNoteProperty("Database", db.Database));
-
+                var pso = RedisPSMembers.Value(
+                    component,
+                    key,
+                    session.InstanceId,
+                    server.EndPoint
+                    );
                 WriteObject(pso);
             }
         }
