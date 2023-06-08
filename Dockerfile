@@ -34,7 +34,7 @@ SHELL ["pwsh", "-Command"]
 COPY ./build/build-pwsh.ps1 ./build-pwsh.ps1
 COPY ./src/Redis.PowerShell ./src/Redis.PowerShell
 
-RUN & ./build-pwsh.ps1 -SolutionDirectory '.' -FullOutputPath './out'
+RUN & ./build-pwsh.ps1 -SolutionDirectory '.' -FullOutputPath './out' -Configuration Release
 
 # Use PowerShell to build the manifest
 FROM mcr.microsoft.com/powershell:latest as build-manifest
@@ -47,8 +47,9 @@ COPY --from=build-dll ./out ./out
 COPY --from=build-docs ./out ./out
 
 ARG VERSION=1.0.0
+ARG CONFIGURATION=Release
 
-RUN & ./build-manifest.ps1 -SolutionDirectory '.' -FullOutputPath './out' -Version ${VERSION}
+RUN & ./build-manifest.ps1 -SolutionDirectory '.' -FullOutputPath './out' -Configuration 'Release' -Version '1.0.0'
 
 # Use powershell to run the module
 FROM mcr.microsoft.com/powershell:latest as runtime
@@ -59,10 +60,10 @@ ENV REDIS_PSModulePath=/usr/local/share/powershell/Modules
 RUN $env:REDIS_PSModulePath = ($env:PSModulePath -split [System.IO.Path]::PathSeparator)[-1]
 
 # install the run script
-COPY ./build/start-interactive.ps1 ./start-interactive.ps1
+COPY ./build/start-interactive.ps1 /start-interactive.ps1
 
 # install the module
 COPY --from=build-manifest ./out ${REDIS_PSModulePath}/Redis.PowerShell
 
 # start the interactive shell
-ENTRYPOINT pwsh -NoProfile -NoExit -File ./start-interactive.ps1 'Redis.PowerShell'
+ENTRYPOINT pwsh -NoProfile -NoExit -File /start-interactive.ps1 'Redis.PowerShell'

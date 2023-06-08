@@ -36,7 +36,7 @@ if (-not (Test-Path $FullOutputPath)) {
 $ManifestPath = Join-Path $FullOutputPath 'Redis.PowerShell.psd1'
 
 $ScriptSourceDirectory = if ($Configuration -eq 'Debug')
-{ Join-Path $SolutionDirectory -ChildPath 'src/Redis.PowerShell' } else
+{ $FullOutputPath, (Join-Path $SolutionDirectory -ChildPath 'src/Redis.PowerShell') } else
 { $FullOutputPath }
 
 if (Test-Path $ManifestPath) {
@@ -50,7 +50,7 @@ if (Test-Path $ManifestPath) {
         }
     }
     # in Debug configuration, the psd1 references source psm1 files directly
-    if (!$RebuildManifest -and ($ScriptSourceDirectory -ne $FullOutputPath)) {
+    if (!$RebuildManifest -and ($Configuration -eq 'Debug')) {
         foreach ($Item in Get-ChildItem -Path $ScriptSourceDirectory -Filter '*.psm1') {
             if ($Item.LastWriteTimeUtc -gt $CurrentManifest.LastWriteTimeUtc) {
                 $RebuildManifest = $true
@@ -79,11 +79,11 @@ if (!$?) {
 }
 
 $FileList = Get-ChildItem -Path $FullOutputPath -Recurse -Name
-if ($ScriptSourceDirectory -ne $FullOutputPath) {
+if ($Configuration -eq 'Debug') {
     $FileList += Get-ChildItem -Path $ScriptSourceDirectory -Filter '*.psm1'
 }
 $ScriptSourceNameParam = @{}
-if ($ScriptSourceDirectory -eq $FullOutputPath) {
+if ($Configuration -ne 'Debug') {
     $ScriptSourceNameParam['Name'] = $true
 }
 

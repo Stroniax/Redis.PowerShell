@@ -10,6 +10,7 @@
             "command": "dotnet",
             "args": [
                 "publish",
+                "${workspaceFolder}/src/Redis.PowerShell.Commands",
                 "-o",
                 "${workspaceFolder}/build/Debug/Redis.PowerShell",
                 "-c",
