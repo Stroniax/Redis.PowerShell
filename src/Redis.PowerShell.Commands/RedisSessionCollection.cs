@@ -6,8 +6,20 @@ namespace Redis.PowerShell
 {
     public sealed class RedisSessionCollection
     {
+        private RedisSession? _defaultSession;
         private readonly ConcurrentDictionary<Guid, RedisSession> _sessions;
-        internal RedisSession? DefaultSession { get; set; }
+        internal RedisSession? DefaultSession
+        {
+            get => _defaultSession;
+            set
+            {
+                _defaultSession = value;
+                if (value != null && !_sessions.ContainsKey(value.InstanceId))
+                {
+                    _sessions.TryAdd(value.InstanceId, value);
+                }
+            }
+        }
 
         public IEnumerable<RedisSession> GetSessions() => _sessions.Values;
 
